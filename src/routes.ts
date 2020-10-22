@@ -9,16 +9,36 @@ const ncmb = new NCMB(config.ncmb.applicationKey, config.ncmb.clientKey);
 
 export default (app, server, passport) => {
   app.get('/auth/twitter', passport.authenticate('twitter'));
+  app.get('/auth/facebook', passport.authenticate('facebook'));
   app.get('/success', async (request, response) => {
     const params = {...request.user};
-    params.oauth_consumer_key = config.twitter.consumerKey;
-    params.consumer_secret = config.twitter.consumerSecret;
-    await ncmb.User.loginWith('twitter', params);
+    const provider = params.provider;
+    switch (provider) {
+      case 'twitter':
+        params.oauth_consumer_key = config.twitter.consumerKey;
+        params.consumer_secret = config.twitter.consumerSecret;
+        params.screen_name = params.username;
+        break;
+      case 'facebook':
+        break;
+    }
+    try {
+      console.log(params);
+      await ncmb.User.loginWith(provider, params);
+    } catch (e) {
+      console.log(e);
+    }
     const data = {user: ncmb.User.getCurrentUser(), sessionToken: ncmb.sessionToken};
     response.render(path.join(__dirname, '..', 'views', '/success.ejs'), data);
   });
   app.get('/auth/twitter/callback', 
       passport.authenticate('twitter', {
+        successRedirect: '/success',
+        failureRedirect: '/login'
+      })
+  );
+  app.get('/auth/facebook/callback', 
+      passport.authenticate('facebook', {
         successRedirect: '/success',
         failureRedirect: '/login'
       })

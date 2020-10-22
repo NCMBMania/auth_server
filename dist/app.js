@@ -11,6 +11,9 @@ var app = express();
 var server = http.createServer(app);
 app.use(cookieParser());
 app.set("view engine", "ejs");
+if (config.secret === 'SOMETHING_LONG_STRING') {
+    throw new Error('セッション用シークレット文字列を変更してください');
+}
 app.use(session({ secret: config.secret }));
 app.use(passport_1["default"].initialize());
 app.use(passport_1["default"].session());

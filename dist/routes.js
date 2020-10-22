@@ -56,17 +56,36 @@ var ejs = require('ejs');
 var ncmb = new NCMB(config.ncmb.applicationKey, config.ncmb.clientKey);
 exports["default"] = (function (app, server, passport) {
     app.get('/auth/twitter', passport.authenticate('twitter'));
+    app.get('/auth/facebook', passport.authenticate('facebook'));
     app.get('/success', function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
-        var params, data;
+        var params, provider, e_1, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     params = __assign({}, request.user);
-                    params.oauth_consumer_key = config.twitter.consumerKey;
-                    params.consumer_secret = config.twitter.consumerSecret;
-                    return [4 /*yield*/, ncmb.User.loginWith('twitter', params)];
+                    provider = params.provider;
+                    switch (provider) {
+                        case 'twitter':
+                            params.oauth_consumer_key = config.twitter.consumerKey;
+                            params.consumer_secret = config.twitter.consumerSecret;
+                            params.screen_name = params.username;
+                            break;
+                        case 'facebook':
+                            break;
+                    }
+                    _a.label = 1;
                 case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    console.log(params);
+                    return [4 /*yield*/, ncmb.User.loginWith(provider, params)];
+                case 2:
                     _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    e_1 = _a.sent();
+                    console.log(e_1);
+                    return [3 /*break*/, 4];
+                case 4:
                     data = { user: ncmb.User.getCurrentUser(), sessionToken: ncmb.sessionToken };
                     response.render(path.join(__dirname, '..', 'views', '/success.ejs'), data);
                     return [2 /*return*/];
@@ -74,6 +93,10 @@ exports["default"] = (function (app, server, passport) {
         });
     }); });
     app.get('/auth/twitter/callback', passport.authenticate('twitter', {
+        successRedirect: '/success',
+        failureRedirect: '/login'
+    }));
+    app.get('/auth/facebook/callback', passport.authenticate('facebook', {
         successRedirect: '/success',
         failureRedirect: '/login'
     }));
