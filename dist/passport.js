@@ -4,6 +4,7 @@ var config = require('../config');
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 passport.serializeUser(function (user, done) {
     done(null, user);
 });
@@ -34,6 +35,16 @@ passport.use(new FacebookStrategy({
         '__type': 'Date',
         'iso': (new Date((new Date()).getTime() + params.expires_in * 1000)).toISOString()
     };
+    process.nextTick(function () {
+        return done(null, profile);
+    });
+}));
+passport.use(new GoogleStrategy({
+    clientID: config.google.clientId,
+    clientSecret: config.google.clientSecret,
+    callbackURL: config.url + "/auth/google/callback"
+}, function (accessToken, refreshToken, params, profile, done) {
+    profile.access_token = params.access_token;
     process.nextTick(function () {
         return done(null, profile);
     });

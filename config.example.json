@@ -12,5 +12,12 @@
     "appId": "YOUR_APP_ID",
     "appSecret": "YOUR_APP_SECRET"
   },
+  "google": {
+    "clientId": "YOUR_CLIENT_ID",
+    "clientSecret": "YOUR_CLIENT_SECRET",
+    "scope": [
+      "YOUR_SCOPE"
+    ]
+  },
   "secret": "SOMETHING_LONG_STRING"
 }

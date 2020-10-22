@@ -57,6 +57,9 @@ var ncmb = new NCMB(config.ncmb.applicationKey, config.ncmb.clientKey);
 exports["default"] = (function (app, server, passport) {
     app.get('/auth/twitter', passport.authenticate('twitter'));
     app.get('/auth/facebook', passport.authenticate('facebook'));
+    app.get('/auth/google', passport.authenticate('google', {
+        scope: config.google.scope
+    }));
     app.get('/success', function (request, response) { return __awaiter(void 0, void 0, void 0, function () {
         var params, provider, e_1, data;
         return __generator(this, function (_a) {
@@ -76,7 +79,6 @@ exports["default"] = (function (app, server, passport) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
-                    console.log(params);
                     return [4 /*yield*/, ncmb.User.loginWith(provider, params)];
                 case 2:
                     _a.sent();
@@ -97,6 +99,10 @@ exports["default"] = (function (app, server, passport) {
         failureRedirect: '/login'
     }));
     app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+        successRedirect: '/success',
+        failureRedirect: '/login'
+    }));
+    app.get('/auth/google/callback', passport.authenticate('google', {
         successRedirect: '/success',
         failureRedirect: '/login'
     }));

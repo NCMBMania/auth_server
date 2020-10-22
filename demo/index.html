@@ -10,7 +10,7 @@
 </head>
 
 <body>
-  <div class="auth">Twitter認証</div><div class="fb_auth">Facebook認証</div>
+  <div class="auth">Twitter認証</div><div class="fb_auth">Facebook認証</div><div class="gg_auth">Google認証</div>
   <div class="data">データ取得</div>
   <div class="res">結果</div>
   <script>
@@ -23,6 +23,10 @@
       }
       document.querySelector('.fb_auth').onclick = async e => {
         await ncmb_auth('facebook');
+        console.log(ncmb.User.getCurrentUser());
+      }
+      document.querySelector('.gg_auth').onclick = async e => {
+        await ncmb_auth('google');
         console.log(ncmb.User.getCurrentUser());
       }
       document.querySelector('.data').onclick = async (e) => {

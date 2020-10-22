@@ -10,6 +10,9 @@ const ncmb = new NCMB(config.ncmb.applicationKey, config.ncmb.clientKey);
 export default (app, server, passport) => {
   app.get('/auth/twitter', passport.authenticate('twitter'));
   app.get('/auth/facebook', passport.authenticate('facebook'));
+  app.get('/auth/google', passport.authenticate('google',{
+    scope: config.google.scope
+  }));
   app.get('/success', async (request, response) => {
     const params = {...request.user};
     const provider = params.provider;
@@ -23,7 +26,6 @@ export default (app, server, passport) => {
         break;
     }
     try {
-      console.log(params);
       await ncmb.User.loginWith(provider, params);
     } catch (e) {
       console.log(e);
@@ -39,6 +41,12 @@ export default (app, server, passport) => {
   );
   app.get('/auth/facebook/callback', 
       passport.authenticate('facebook', {
+        successRedirect: '/success',
+        failureRedirect: '/login'
+      })
+  );
+  app.get('/auth/google/callback', 
+      passport.authenticate('google', {
         successRedirect: '/success',
         failureRedirect: '/login'
       })
