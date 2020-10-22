@@ -1,0 +1,37 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="ncmb.min.js"></script>
+  <script src="https://moongift.ngrok.io/auth.js"></script>
+</head>
+
+<body>
+  <div class="auth">Twitter認証</div>
+  <div class="data">データ取得</div>
+  <div class="res">結果</div>
+  <script>
+    const ncmb = new NCMB('61a71dde88f26884380e0a23153bf2d451d7465f3bf34066a1ff14bbf08c878c', '6bf38949595217d578ee5b689da101989e96d2aed7f1ba9583ff88b08ab7036f')
+    const AUTH_URL = 'https://moongift.ngrok.io';
+    document.addEventListener('DOMContentLoaded', e => {
+      document.querySelector('.auth').onclick = async e => {
+        await ncmb_auth('twitter');
+        console.log(ncmb.User.getCurrentUser());
+      }
+      document.querySelector('.data').onclick = async (e) => {
+        ncmb.User.getCurrentUser();
+        const Test = ncmb.DataStore('Test');
+        const ary = await Test.fetchAll();
+        document.querySelector('.res').innerHTML = `結果： ${ary.length}件`;
+      };
+    });
+
+
+    
+
+  </script>
+</body>
+</html>

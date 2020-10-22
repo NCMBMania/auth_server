@@ -1,0 +1,12 @@
+{
+  "url": "https://example.com",
+  "ncmb": {
+    "applicationKey": "YOUR_APPLICATION_KEY",
+    "clientKey": "YOUR_CLIENT_KEY"
+  },
+  "twitter": {
+    "consumerKey": "YOUR_CONSUMER_KEY",
+    "consumerSecret": "YOUR_CONSUMER_SECRET"
+  },
+  "secret": "SOMETHING_LONG_STRING"
+}
