@@ -11,6 +11,7 @@
 
 <body>
   <div class="auth">Twitter認証</div><div class="fb_auth">Facebook認証</div><div class="gg_auth">Google認証</div>
+  <div class="apple_auth">Apple認証</div>
   <div class="data">データ取得</div>
   <div class="res">結果</div>
   <script>
@@ -29,6 +30,14 @@
         await ncmb_auth('google');
         console.log(ncmb.User.getCurrentUser());
       }
+      document.querySelector('.apple_auth').onclick = async e => {
+        try {
+          await ncmb_auth('apple');
+          console.log(ncmb.User.getCurrentUser());
+        } catch (e) {
+          console.log(e);
+        }
+      }
       document.querySelector('.data').onclick = async (e) => {
         ncmb.User.getCurrentUser();
         const Test = ncmb.DataStore('Test');
@@ -36,9 +45,6 @@
         document.querySelector('.res').innerHTML = `結果： ${ary.length}件`;
       };
     });
-
-
-    
 
   </script>
 </body>

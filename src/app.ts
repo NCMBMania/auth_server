@@ -15,6 +15,8 @@ if (config.secret === 'SOMETHING_LONG_STRING') {
   throw new Error('セッション用シークレット文字列を変更してください');
 }
 app.use(session({secret: config.secret}));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize()); 
 app.use(passport.session());
 app.use(express.static(__dirname + '/../public'));

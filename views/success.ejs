@@ -10,7 +10,11 @@
 <body>
   <script>
     document.addEventListener('DOMContentLoaded', e => {
-      window.opener.postMessage({sessionToken: '<%= sessionToken %>', user: '<%- JSON.stringify(user) %>'}, '*');
+      if ('<%= error %>' !== "") {
+        window.opener.postMessage({error: '<%- error %>'}, '*');
+      } else {
+        window.opener.postMessage({sessionToken: '<%= sessionToken %>', user: '<%- JSON.stringify(user) %>'}, '*');
+      }
       window.close();
     })
   </script>

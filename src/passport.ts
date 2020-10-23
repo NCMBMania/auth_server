@@ -1,8 +1,10 @@
 const config = require('../config');
 const passport = require('passport');
+const path = require('path');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const AppleStrategy = require('passport-apple');
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -20,6 +22,9 @@ passport.use(new TwitterStrategy({
     passport.session.id = profile.id;
     profile.oauth_token = token;
     profile.oauth_token_secret = tokenSecret;
+    profile.oauth_consumer_key = config.twitter.consumerKey;
+    profile.consumer_secret = config.twitter.consumerSecret;
+    profile.screen_name = profile.username;
     process.nextTick(() => {
       return done(null, profile);
     });
@@ -56,5 +61,24 @@ passport.use(new GoogleStrategy({
     });
   }
 ));
+
+passport.use(new AppleStrategy({
+    clientID: config.apple.clientId,
+    teamID: config.apple.teamId,
+    callbackURL: `${config.url}/auth/apple/callback`,
+    keyID: config.apple.keyId,
+    privateKeyLocation: path.join(__dirname, config.apple.key),
+    passReqToCallback: true
+}, function(req, accessToken, refreshToken, decodedIdToken, profile, done) {
+  const params = {
+    provider: 'apple',
+    id: decodedIdToken.sub,
+    access_token: accessToken,
+    client_id: config.apple.appId
+  }
+  process.nextTick(() => {
+    return done(null, params);
+  });
+}));
 
 export default passport;
